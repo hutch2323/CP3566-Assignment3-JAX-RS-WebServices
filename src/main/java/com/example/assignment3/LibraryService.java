@@ -203,7 +203,6 @@ public class LibraryService {
                 pstmt.setString(4, book.getCopyright());
                 pstmt.execute();
             } catch (SQLException throwables) {
-                System.err.println("Seems like we're throwing an error at line 206");
                 throwables.printStackTrace();
             }
 
@@ -252,6 +251,128 @@ public class LibraryService {
             return authorISBN;
         } else{
                return null;
+        }
+    }
+
+    public Book updateBook(Book book) throws SQLException {
+        // check to see if the book exists
+        if(checkForDuplicateBook(book.getIsbn())) {
+            String sql = "UPDATE titles " +
+                    "SET title = ?, editionNumber = ?, copyright = ? " +
+                    "WHERE isbn = ?";
+
+            try (Connection conn = DBConnection.initDatabase();
+                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
+//                pstmt.setString(1, book.getIsbn());
+                pstmt.setString(1, book.getTitle());
+                pstmt.setInt(2, book.getEditionNumber());
+                pstmt.setString(3, book.getCopyright());
+                pstmt.setString(4, book.getIsbn());
+                pstmt.execute();
+            } catch (SQLException throwables) {
+                System.err.println("Seems like we're throwing an error at line 206");
+                throwables.printStackTrace();
+            }
+
+            return book;
+        } else {
+            Book noBook = new Book("Error: Book could not be updated", "", 0, "");
+            return noBook;
+        }
+    }
+
+    public Author updateAuthor(Author author) throws SQLException {
+        // insure that author exists
+        if(checkForDuplicateAuthor(author.getAuthorID())){
+            String sql = "UPDATE authors " +
+                    "SET firstName = ?, lastName = ? " +
+                    "WHERE authorID = ?";
+
+            try (Connection conn = DBConnection.initDatabase();
+                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
+                pstmt.setString(1, author.getFirstName());
+                pstmt.setString(2, author.getLastName());
+                pstmt.setInt(3, author.getAuthorID());
+                pstmt.execute();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            return author;
+        } else {
+            Author noAuthor = new Author(0, "Error: Book could not be updated", "");
+            return noAuthor;
+        }
+    }
+
+    public void deleteAuthorISBN(String isbn) throws SQLException {
+        String SQLAuthorISBN = "DELETE from authorisbn " +
+                "WHERE isbn = ?";
+
+        try (Connection conn = DBConnection.initDatabase();
+             PreparedStatement pstmt = conn.prepareStatement(SQLAuthorISBN);) {
+            pstmt.setString(1, isbn);
+            pstmt.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deleteAuthorISBN(int authorID) throws SQLException {
+        String SQLAuthorISBN = "DELETE from authorisbn " +
+                "WHERE authorID = ?";
+
+        try (Connection conn = DBConnection.initDatabase();
+             PreparedStatement pstmt = conn.prepareStatement(SQLAuthorISBN);) {
+            pstmt.setInt(1, authorID);
+            pstmt.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public String deleteBook(String isbn) throws SQLException {
+        // check to see if the book exists
+        if(checkForDuplicateBook(isbn)) {
+            deleteAuthorISBN(isbn);
+            String sql = "DELETE FROM titles " +
+                    "WHERE isbn = ?";
+
+            try (Connection conn = DBConnection.initDatabase();
+                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
+                pstmt.setString(1, isbn);
+                pstmt.execute();
+            } catch (SQLException throwables) {
+                System.err.println("Seems like we're throwing an error at line 206");
+                throwables.printStackTrace();
+            }
+
+            return isbn + " has been deleted.";
+        } else {
+            return "Error: " + isbn + " does not exist.";
+        }
+    }
+
+    public String deleteAuthor(int authorID) throws SQLException {
+        // check to see that author exists
+        if(checkForDuplicateAuthor(authorID)){
+            deleteAuthorISBN(authorID);
+            String sql = "DELETE from authors " +
+                    "WHERE authorID = ?";
+
+            try (Connection conn = DBConnection.initDatabase();
+                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
+                pstmt.setInt(1, authorID);
+                pstmt.execute();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            return authorID + " has been deleted.";
+        } else {
+            return "Error: " + authorID + " does not exist.";
         }
     }
 }

@@ -3,11 +3,7 @@ package com.example.assignment3;
 import java.sql.SQLException;
 import java.util.List;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 
@@ -76,5 +72,32 @@ public class LibraryController {
         return libraryService.addAuthorISBN(authorISBN);
     }
 
+    @PUT
+    @Path("/modbook")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Book modBook(Book book) throws SQLException {
+        return libraryService.updateBook(book);
+    }
+
+    @PUT
+    @Path("/modauthor")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Author modAuthor(Author author) throws SQLException {
+        return libraryService.updateAuthor(author);
+    }
+
+    @DELETE
+    @Path("/delbook/{id}")
+    @Produces("text/plain")
+    public String delBook(@PathParam("id") String id) throws SQLException {
+        return libraryService.deleteBook(id);
+    }
+
+    @DELETE
+    @Path("/delauthor/{id}")
+    @Produces("text/plain")
+    public String delAuthor(@PathParam("id") int id) throws SQLException {
+        return libraryService.deleteAuthor(id);
+    }
 
 }
