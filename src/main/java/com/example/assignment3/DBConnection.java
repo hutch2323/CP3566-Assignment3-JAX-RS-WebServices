@@ -2,6 +2,7 @@ package com.example.assignment3;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 public class DBConnection {
@@ -9,20 +10,23 @@ public class DBConnection {
     static private String DB_URL = "jdbc:mariadb://localhost:3300/books";
     static private String USER = "root";
     static private String PASS = "password";
+    static private Driver driver = new org.mariadb.jdbc.Driver();
 
-    public static Connection initDatabase() {
+    public static Connection initDatabase() throws SQLException {
         // Open a connection
-        try {
-            Class.forName(JDBC_DRIVER);
+        try{
+            DriverManager.registerDriver(driver);
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+//            Class.forName(JDBC_DRIVER);
             return conn;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("Error connecting with database. Closing application");
             System.exit(1);
             return null;
         } finally {
-//            conn.close();
+//            conn.close()
+            DriverManager.deregisterDriver(driver);
         }
     }
 

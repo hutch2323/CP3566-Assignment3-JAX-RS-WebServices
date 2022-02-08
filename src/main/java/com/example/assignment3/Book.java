@@ -10,6 +10,10 @@ public class Book {
     private String copyright;
     private List<Author> authorList = new ArrayList<>();
 
+    public Book(){
+        super();
+    };
+
     public Book(String isbn, String title, int editionNumber, String copyright){
         this.isbn = isbn;
         this.title = title;
