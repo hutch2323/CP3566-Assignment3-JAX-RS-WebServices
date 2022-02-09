@@ -17,10 +17,17 @@ public class LibraryController {
 
         // not finished yet. Need to add all options
         return "Hello and welcome to the Library API. The API provides the following services:" +
-                "\n1. View Books: use app/library/books" +
-                "\n2. View individual book: use app/library/book/ID - where ID is the ISBN of the desired book" +
-                "\n3. View Authors: use app/library/authors" +
-                "\n4. View individual author: use app/library/author/ID - where ID is the authorID of the desired author";
+                "\n1.  View Books: navigate to app/library/books" +
+                "\n2.  View individual book: navigate to app/library/book/ID - where ID is the ISBN of the desired book" +
+                "\n3.  View Authors: navigate to app/library/authors" +
+                "\n4.  View individual author: navigate to app/library/author/ID - where ID is the authorID of the desired author" +
+                "\n5.  Add book: send a json Book object to the path app/library/addbook using a POST request" +
+                "\n6.  Add author: send a json Author object to the path app/library/addauthor using a POST request" +
+                "\n7.  Associate author with book: send a json AuthorISBN (authorID, isbn) object to the path app/library/associateauthor using a POST request" +
+                "\n8.  Modify book: send a modified json Book object to the path app/library/modbook using a PUT request" +
+                "\n9.  Modify author: send a modified json Author object to the path app/library/modauthor using a PUT request" +
+                "\n10. Delete book: navigate to app/library/delbook/ID - where ID is the ISBN of the desired book" +
+                "\n11. Delete author: navigate to app/library/delauthor/ID - where ID is the authorID of the desired author";
     }
 
     @GET
